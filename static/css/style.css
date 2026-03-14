@@ -1,0 +1,360 @@
+/* General Page Styling */
+html, body{
+    height:100%;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:0;
+}
+
+/* Overall layout center wrapper */
+.layout-center{
+    max-width:1100px;
+    margin:0 auto;
+    padding:20px 0 40px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+/* Make main content stretch and push footer down */
+main.container{
+    flex:1;
+}
+
+/* Header */
+header{
+    background:#2c3e50;
+    color:white;
+    text-align:center;
+    padding:20px;
+}
+
+/* Navigation Menu */
+nav{
+    background:#34495e;
+    padding:12px;
+    text-align:center;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:0 20px;
+    font-weight:bold;
+    font-size:16px;
+}
+
+nav a:hover{
+    color:#f1c40f;
+}
+
+/* Main Container */
+.container{
+    width:70%;
+    margin:40px auto;
+    background:white;
+    padding:35px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Headings */
+h1{
+    text-align:center;
+    color:#2c3e50;
+    margin-bottom:10px;
+}
+
+h2,h3{
+    text-align:center;
+    color:#34495e;
+}
+
+/* Student Details Section */
+.details{
+    margin:20px 0;
+    line-height:1.8;
+}
+
+/* Form Styling */
+form{
+    margin-top:20px;
+    text-align:left;
+}
+
+/* Form Row */
+.form-row{
+    display:flex;
+    justify-content:space-between;
+    gap:25px;              /* space between input boxes */
+    flex-wrap:nowrap;
+    margin-bottom:20px;    /* space below the whole row */
+}
+
+.form-row > div{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+}
+
+/* In subject rows, keep action (remove) compact */
+.subject-actions{
+    flex:0 0 auto;
+    align-self:flex-end;
+}
+
+/* Input Fields */
+input{
+    padding:10px;
+    width:100%;
+    margin:5px 0;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+/* Buttons */
+button{
+    background:#3498db;
+    color:white;
+    border:none;
+    padding:10px 20px;
+    margin:5px;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button:hover{
+    background:#2980b9;
+}
+
+/* Table Styling */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:25px;
+    border:1px solid #d0d7de;
+    border-radius:6px;
+}
+
+table th{
+    background:#2c3e50;
+    color:white;
+    padding:12px;
+}
+
+table td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+table tr:nth-child(even){
+    background:#f8f8f8;
+}
+
+table tr:hover{
+    background:#f1f1f1;
+}
+
+/* Status Labels */
+.approved{
+    color:#27ae60;
+    font-weight:bold;
+}
+
+.pending{
+    color:#e67e22;
+    font-weight:bold;
+}
+
+.rejected{
+    color:#e74c3c;
+    font-weight:bold;
+}
+
+/* Approve Button */
+.approve{
+    color:white;
+    background:#27ae60;
+    padding:6px 12px;
+    border-radius:4px;
+    text-decoration:none;
+    margin-right:6px;
+}
+
+.approve:hover{
+    background:#1e874b;
+}
+
+/* Reject Button */
+.reject{
+    color:white;
+    background:#e74c3c;
+    padding:6px 12px;
+    border-radius:4px;
+    text-decoration:none;
+    margin-right:6px;
+}
+
+.reject:hover{
+    background:#c0392b;
+}
+
+/* Remove button (faculty dashboard) */
+.btn-remove{
+    color:white;
+    background:#95a5a6;
+    padding:6px 12px;
+    border-radius:4px;
+    text-decoration:none;
+    margin-left:4px;
+}
+
+.btn-remove:hover{
+    background:#7f8c8d;
+}
+
+/* Footer */
+footer{
+    text-align:center;
+    padding:15px;
+    background:#ecf0f1;
+    color:#555;
+}
+
+footer .logout-btn{
+    display:inline-block;
+    margin-top:8px;
+    padding:8px 20px;
+    background:#2c3e50;
+    color:#fff;
+    text-decoration:none;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+footer .logout-btn:hover{
+    background:#34495e;
+}
+
+/* Home page login buttons */
+.home-links{
+    margin-top:40px;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.home-links a{
+    display:inline-block;
+    padding:12px 24px;
+    border-radius:6px;
+    background:#3498db;
+    color:#fff;
+    text-decoration:none;
+    font-weight:bold;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    transition:background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.home-links a:hover{
+    background:#2980b9;
+    transform:translateY(-1px);
+    box-shadow:0 6px 14px rgba(0,0,0,0.15);
+}
+
+.home-links a:active{
+    transform:translateY(0);
+    box-shadow:0 3px 8px rgba(0,0,0,0.12);
+}
+
+/* Home intro paragraph */
+.home-intro{
+    text-align:center;
+    margin-top:10px;
+    font-size:16px;
+    color:#555;
+}
+
+/* Auth / Login Card */
+.auth-card{
+    max-width:420px;
+    margin:40px auto;
+    padding:30px;
+    background:#ffffff;
+    border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
+
+.auth-card h2{
+    text-align:center;
+    margin-top:0;
+    margin-bottom:20px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:15px;
+}
+
+.form-group label{
+    margin-bottom:5px;
+    font-weight:bold;
+    color:#34495e;
+    text-align:left;
+}
+
+.form-actions{
+    text-align:center;
+    margin-top:10px;
+}
+
+.auth-footer-text{
+    margin-top:15px;
+    text-align:center;
+    font-size:14px;
+    color:#555;
+}
+
+.auth-footer-text a{
+    color:#3498db;
+    font-weight:bold;
+    text-decoration:none;
+}
+
+.auth-footer-text a:hover{
+    text-decoration:underline;
+}
+
+/* Center login pages */
+.login-page{
+    min-height:60vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Page title colors */
+.page-title{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.page-title.student{
+    color:#27ae60;
+}
+
+.page-title.faculty{
+    color:#2980b9;
+}
+
+.page-title.hod{
+    color:#8e44ad;
+}

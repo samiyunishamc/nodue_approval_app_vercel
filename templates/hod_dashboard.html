@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2 class="page-title hod">HOD Dashboard</h2>
+
+<table>
+
+    <tr>
+        <th>Student</th>
+        <th>Subject</th>
+        <th>Faculty Status</th>
+        <th>Status</th>
+        <th>HOD Action</th>
+    </tr>
+
+    {% for app in applications %}
+
+    <tr>
+
+        <td>{{ app.reg_no }}</td>
+        <td>{{ app.subject_name }}</td>
+        <td>
+            {% if app.faculty_status == 'Approved' %}
+            <span class="approved">Approved</span>
+            {% elif app.faculty_status == 'Rejected' %}
+            <span class="rejected">Rejected</span>
+            {% else %}
+            <span class="pending">Pending</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if app.hod_status == 'Approved' %}
+            <span class="approved">Approved</span>
+            {% elif app.hod_status == 'Rejected' %}
+            <span class="rejected">Rejected</span>
+            {% else %}
+            <span class="pending">Pending</span>
+            {% endif %}
+        </td>
+
+        <td>
+            <a class="approve" href="/hod_approve/{{app.id}}">Approve</a>
+            <a class="reject" href="/hod_reject/{{app.id}}">Reject</a>
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% endblock %}
+
+{% block footer_links %}
+<p><a href="/hod_login" class="logout-btn">Logout</a></p>
+{% endblock %}

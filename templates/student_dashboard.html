@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="page-title student">Student Dashboard</h2>
+
+<div class="details">
+    <h3>Student Details</h3>
+    <p><b>Name:</b> {{ student.name }}</p>
+    <p><b>Register Number:</b> {{ student.reg_no }}</p>
+    <p><b>Department:</b> {{ student.department }}</p>
+    <p><b>Semester:</b> {{ student.semester }}</p>
+</div>
+
+<hr>
+
+<h3>Apply for No Due</h3>
+
+<form method="POST" action="/apply_nodue">
+
+    <p><b>Register Number:</b> {{ student.reg_no }}</p>
+    <input type="hidden" name="reg_no" value="{{ student.reg_no }}">
+
+    <div id="subjects">
+
+        <div class="subject-row">
+
+            <div class="form-row">
+                <div>
+                    <label>Subject Code</label>
+                    <input type="text" name="subject_code[]" required>
+                </div>
+
+                <div>
+                    <label>Subject Name</label>
+                    <input type="text" name="subject_name[]" required>
+                </div>
+
+                <div>
+                    <label>Faculty Name</label>
+                    <input type="text" name="faculty_name[]" required>
+                </div>
+
+                <div class="subject-actions">
+                    <button type="button" onclick="removeSubject(this)">Remove</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <button type="button" onclick="addSubject()">Add Another Subject</button>
+
+    <br><br>
+
+    <button type="submit">Submit Application</button>
+
+</form>
+
+<hr>
+
+<h3>Application Status</h3>
+
+{% if applications %}
+
+<table>
+
+    <tr>
+        <th>Subject</th>
+        <th>Faculty Approval</th>
+        <th>HOD Approval</th>
+        <th>Action</th>
+    </tr>
+
+    {% for app in applications %}
+
+    <tr>
+
+        <td>{{ app.subject_name }}</td>
+
+        <td>
+            {% if app.faculty_status == 'Approved' %}
+            <span class="approved">Approved</span>
+            {% elif app.faculty_status == 'Rejected' %}
+            <span class="rejected">Rejected</span>
+            {% else %}
+            <span class="pending">Pending</span>
+            {% endif %}
+        </td>
+
+        <td>
+            {% if app.hod_status == 'Approved' %}
+            <span class="approved">Approved</span>
+            {% elif app.hod_status == 'Rejected' %}
+            <span class="rejected">Rejected</span>
+            {% else %}
+            <span class="pending">Pending</span>
+            {% endif %}
+        </td>
+
+        <td>
+            <a class="reject" href="/student_delete_application/{{ app.id }}/{{ student.reg_no }}">Remove</a>
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+{% else %}
+
+<p style="text-align:center; margin-top:10px;">No applications submitted yet.</p>
+
+{% endif %}
+
+<script>
+
+function addSubject(){
+
+    const subjectsContainer = document.getElementById("subjects");
+    const index = subjectsContainer.getElementsByClassName("subject-row").length + 1;
+
+    let div = document.createElement("div");
+
+    div.classList.add("subject-row");
+
+    div.innerHTML = `
+<br>
+<div class="form-row">
+    <div>
+        <label>Subject Code</label>
+        <input type="text" name="subject_code[]" required>
+    </div>
+
+    <div>
+        <label>Subject Name</label>
+        <input type="text" name="subject_name[]" required>
+    </div>
+
+    <div>
+        <label>Faculty Name</label>
+        <input type="text" name="faculty_name[]" required>
+    </div>
+
+    <div class="subject-actions">
+        <button type="button" onclick="removeSubject(this)">Remove</button>
+    </div>
+</div>
+`;
+
+    document.getElementById("subjects").appendChild(div);
+
+}
+
+function removeSubject(button){
+    const row = button.closest('.subject-row');
+    const container = document.getElementById("subjects");
+    // Only allow removing if there is more than one subject row
+    if (container.getElementsByClassName("subject-row").length > 1 && row){
+        row.remove();
+    }
+}
+
+</script>
+
+{% endblock %}
+
+{% block footer_links %}
+<p><a href="/student_login" class="logout-btn">Logout</a></p>
+{% endblock %}
