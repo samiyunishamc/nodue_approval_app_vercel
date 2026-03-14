@@ -1,19 +1,37 @@
-from flask import Flask, render_template, request, redirect
-import mysql.connector
+from flask import Flask, render_template, request, redirect, g
+import psycopg2
+import psycopg2.extras
+import os
 
 app = Flask(__name__)
 
 # ---------------- DATABASE CONNECTION ----------------
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="shamu@2006",
-    database="nodue",
-    autocommit=True
-)
+def get_db():
+    if 'db' not in g:
+        DATABASE_URL = os.environ.get('DATABASE_URL')
+        
+        if DATABASE_URL:
+            g.db = psycopg2.connect(DATABASE_URL)
+        else:
+            # Fallback for local development
+            g.db = psycopg2.connect(
+                host=os.environ.get('DB_HOST', 'localhost'),
+                user=os.environ.get('DB_USER', 'postgres'),
+                password=os.environ.get('DB_PASSWORD', ''),
+                database=os.environ.get('DB_NAME', 'nodue'),
+                port=os.environ.get('DB_PORT', '5432')
+            )
+    return g.db
 
-cursor = db.cursor(dictionary=True, buffered=True)
+def get_cursor():
+    return get_db().cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
+# ---------------- TEARDOWN DATABASE CONNECTION ----------------
+@app.teardown_appcontext
+def close_db_connection(exception):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 # ---------------- HOME PAGE ----------------
 @app.route('/')
@@ -33,10 +51,12 @@ def student_register():
         semester = request.form['semester']
         password = request.form['password']
 
+        cursor = get_cursor()
         cursor.execute(
             "INSERT INTO students (reg_no, name, department, semester, password) VALUES (%s, %s, %s, %s, %s)",
             (reg_no, name, department, semester, password)
         )
+        get_db().commit()
 
         return redirect('/student_login')
 
@@ -52,6 +72,7 @@ def student_login():
         reg = request.form['reg_no']
         pwd = request.form['password']
 
+        cursor = get_cursor()
         cursor.execute(
             "SELECT * FROM students WHERE reg_no=%s AND password=%s",
             (reg, pwd)
@@ -69,6 +90,7 @@ def student_login():
 @app.route('/student_dashboard/<reg>')
 def student_dashboard(reg):
 
+    cursor = get_cursor()
     cursor.execute(
         "SELECT * FROM students WHERE reg_no=%s",
         (reg,)
@@ -106,12 +128,15 @@ def apply():
     names = request.form.getlist('subject_name[]')
     facs = request.form.getlist('faculty_name[]')
 
+    cursor = get_cursor()
     for i in range(len(codes)):
 
         cursor.execute(
             "INSERT INTO applications (reg_no,subject_code,subject_name,faculty_name) VALUES (%s,%s,%s,%s)",
             (reg, codes[i], names[i], facs[i])
         )
+    
+    get_db().commit()
 
     return redirect('/student_dashboard/' + reg)
 
@@ -121,10 +146,12 @@ def apply():
 def student_delete_application(id, reg):
 
     # Delete only this student's application row
+    cursor = get_cursor()
     cursor.execute(
         "DELETE FROM applications WHERE id=%s AND reg_no=%s",
         (id, reg)
     )
+    get_db().commit()
 
     return redirect('/student_dashboard/' + reg)
 
@@ -139,10 +166,12 @@ def faculty_register():
         username = request.form['username']
         password = request.form['password']
 
+        cursor = get_cursor()
         cursor.execute(
             "INSERT INTO faculty (name, username, password) VALUES (%s, %s, %s)",
             (name, username, password)
         )
+        get_db().commit()
 
         return redirect('/faculty_login')
 
@@ -158,6 +187,7 @@ def faculty_login():
         username = request.form['username']
         password = request.form['password']
 
+        cursor = get_cursor()
         cursor.execute(
             "SELECT * FROM faculty WHERE username=%s AND password=%s",
             (username, password)
@@ -175,6 +205,7 @@ def faculty_login():
 @app.route('/faculty_dashboard')
 def faculty_dashboard():
 
+    cursor = get_cursor()
     cursor.execute("SELECT * FROM applications")
     apps = cursor.fetchall()
 
@@ -196,10 +227,12 @@ def faculty_dashboard():
 @app.route('/faculty_approve/<int:id>')
 def faculty_approve(id):
 
+    cursor = get_cursor()
     cursor.execute(
         "UPDATE applications SET faculty_status='Approved' WHERE id=%s",
         (id,)
     )
+    get_db().commit()
 
     return redirect('/faculty_dashboard')
 
@@ -208,10 +241,12 @@ def faculty_approve(id):
 @app.route('/faculty_reject/<int:id>')
 def faculty_reject(id):
 
+    cursor = get_cursor()
     cursor.execute(
         "UPDATE applications SET faculty_status='Rejected' WHERE id=%s",
         (id,)
     )
+    get_db().commit()
 
     return redirect('/faculty_dashboard')
 
@@ -220,7 +255,9 @@ def faculty_reject(id):
 @app.route('/faculty_delete_application/<int:id>', methods=['GET', 'POST'])
 def faculty_delete_application(id):
 
+    cursor = get_cursor()
     cursor.execute("DELETE FROM applications WHERE id=%s", (id,))
+    get_db().commit()
 
     return redirect('/faculty_dashboard')
 
@@ -318,3 +355,6 @@ def hod_reject(id):
 # ---------------- RUN FLASK APP ----------------
 if __name__ == "__main__":
     app.run(debug=True)
+
+# For Vercel deployment
+app = app

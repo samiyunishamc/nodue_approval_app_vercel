@@ -1,9 +1,9 @@
 CREATE DATABASE nodue;
 
-USE nodue;
+\c nodue;
 
 CREATE TABLE students(
-id INT AUTO_INCREMENT PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 name VARCHAR(100),
 reg_no VARCHAR(50),
 department VARCHAR(100),
@@ -12,21 +12,21 @@ password VARCHAR(100)
 );
 
 CREATE TABLE faculty(
-id INT AUTO_INCREMENT PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 name VARCHAR(100),
 username VARCHAR(50),
 password VARCHAR(100)
 );
 
 CREATE TABLE hod(
-id INT AUTO_INCREMENT PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 name VARCHAR(100),
 username VARCHAR(50),
 password VARCHAR(100)
 );
 
 CREATE TABLE applications(
-id INT AUTO_INCREMENT PRIMARY KEY,
+id SERIAL PRIMARY KEY,
 reg_no VARCHAR(50),
 subject_code VARCHAR(20),
 subject_name VARCHAR(100),
