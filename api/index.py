@@ -15,14 +15,8 @@ def get_db():
         if DATABASE_URL:
             g.db = psycopg2.connect(DATABASE_URL)
         else:
-            # Fallback for local development
-            g.db = psycopg2.connect(
-                host=os.environ.get('DB_HOST', 'localhost'),
-                user=os.environ.get('DB_USER', 'postgres'),
-                password=os.environ.get('DB_PASSWORD', ''),
-                database=os.environ.get('DB_NAME', 'nodue'),
-                port=os.environ.get('DB_PORT', '5432')
-            )
+            # For Vercel deployment, DATABASE_URL must be set
+            raise RuntimeError("DATABASE_URL environment variable is not set. Please configure your Neon Postgres database URL in Vercel environment variables.")
     return g.db
 
 def get_cursor():
