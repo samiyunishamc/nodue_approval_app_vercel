@@ -3,7 +3,9 @@ import psycopg2
 import psycopg2.extras
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, 
+            template_folder='../templates',
+            static_folder='../static')
 
 # ---------------- DATABASE CONNECTION ----------------
 def get_db():
@@ -272,10 +274,12 @@ def hod_register():
         username = request.form['username']
         password = request.form['password']
 
+        cursor = get_cursor()
         cursor.execute(
             "INSERT INTO hod (name, username, password) VALUES (%s, %s, %s)",
             (name, username, password)
         )
+        get_db().commit()
 
         return redirect('/hod_login')
 
@@ -291,6 +295,7 @@ def hod_login():
         username = request.form['username']
         password = request.form['password']
 
+        cursor = get_cursor()
         cursor.execute(
             "SELECT * FROM hod WHERE username=%s AND password=%s",
             (username, password)
@@ -308,6 +313,7 @@ def hod_login():
 @app.route('/hod_dashboard')
 def hod_dashboard():
 
+    cursor = get_cursor()
     cursor.execute(
         "SELECT * FROM applications WHERE faculty_status='Approved'"
     )
@@ -332,10 +338,12 @@ def hod_dashboard():
 @app.route('/hod_approve/<int:id>')
 def hod_approve(id):
 
+    cursor = get_cursor()
     cursor.execute(
         "UPDATE applications SET hod_status='Approved' WHERE id=%s",
         (id,)
     )
+    get_db().commit()
 
     return redirect('/hod_dashboard')
 
@@ -344,10 +352,12 @@ def hod_approve(id):
 @app.route('/hod_reject/<int:id>')
 def hod_reject(id):
 
+    cursor = get_cursor()
     cursor.execute(
         "UPDATE applications SET hod_status='Rejected' WHERE id=%s",
         (id,)
     )
+    get_db().commit()
 
     return redirect('/hod_dashboard')
 
